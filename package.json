@@ -21,6 +21,9 @@
     "test": "tape test/*.js | tap-spec"
   },
   "keywords": [],
+  "dependencies": {
+    "matchit": "^1.0.0"
+  },
   "devDependencies": {
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
