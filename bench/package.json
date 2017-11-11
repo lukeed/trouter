@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "cli-table2": "^0.2.0"
+  }
+}
