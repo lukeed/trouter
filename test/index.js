@@ -2,7 +2,7 @@ const test = require('tape');
 const Trouter = require('../lib');
 
 const r = new Trouter();
-const METHODS = ['get', 'post', 'put', 'delete'];
+const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
 test('exports', t => {
 	t.is(typeof Trouter, 'function', 'exports a function');
