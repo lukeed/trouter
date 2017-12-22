@@ -1,6 +1,6 @@
 {
   "name": "trouter",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "WIP",
   "repository": "lukeed/mri",
   "main": "lib/index.js",
