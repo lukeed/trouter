@@ -1,7 +1,7 @@
 {
   "name": "trouter",
   "version": "0.1.1",
-  "description": "WIP",
+  "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
   "repository": "lukeed/mri",
   "main": "lib/index.js",
   "license": "MIT",
