@@ -20,7 +20,11 @@
     "bench": "node bench",
     "test": "tape test/*.js | tap-spec"
   },
-  "keywords": [],
+  "keywords": [
+    "route",
+    "router",
+    "routing"
+  ],
   "dependencies": {
     "matchit": "^1.0.0"
   },
