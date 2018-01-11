@@ -1,21 +1,38 @@
-const test = require('tape');
+const { test, Test } = require('tape');
 const Trouter = require('../lib');
 
 const r = new Trouter();
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+const $ = Test.prototype;
+
+$.isEmpty = function (val, msg) {
+	this.ok(!Object.keys(val).length, msg);
+}
+
+$.isArray = function (val, msg) {
+	this.ok(Array.isArray(val), msg);
+}
+
+$.isObject = function (val, msg) {
+	this.ok(Boolean(val) && (val.constructor === Object), msg);
+}
+
+$.isFunction = function (val, msg) {
+	this.is(typeof val, 'function', msg);
+}
 
 test('exports', t => {
-	t.is(typeof Trouter, 'function', 'exports a function');
+	t.isFunction(Trouter, 'exports a function');
 	t.end();
 });
 
 test('instance', t => {
 	t.true(r instanceof Trouter, 'creates new `Trouter` instances');
-	t.is(typeof r.opts, 'object', '~> has `opts` key');
-	t.is(typeof r.routes, 'object', '~> has `routes` key');
-	t.is(typeof r.handlers, 'object', '~> has `handlers` key');
 
 	let arr, obj;
+	t.isObject(r.opts, '~> has `opts` key');
+	t.isObject(r.routes, '~> has `routes` key');
+	t.isObject(r.handlers, '~> has `handlers` key');
 	METHODS.forEach(str => {
 		arr=r.routes[str]; obj=r.handlers[str];
 		t.true(Array.isArray(arr), `~~> has \`routes.${str}\` array`);
