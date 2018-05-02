@@ -1,6 +1,6 @@
 {
   "name": "trouter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
   "repository": "lukeed/trouter",
   "main": "lib/index.js",
