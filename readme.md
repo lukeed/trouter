@@ -78,21 +78,27 @@ The function that should be tied to this `pattern`.
 
 > **Important:** Trouter does not care what your function signature looks like!<br> You are not bound to the `(req, res)` standard.
 
-### trouter.find(method, url)
-Returns: `Object|Boolean`<br>
-Searches within current instance for a `method` + `pattern` pairing that matches the current `method` + `url`.
+### trouter.all(pattern, handler)
+Returns: `self`
 
-This method will return `false` if no match is found. Otherwise it returns an Object with `params` and `handler` keys.
+This is an alias for [`trouter.add('*', pattern, handler)`](#trouteraddmethod-pattern-handler), matching **all** HTTP methods.
 
-#### method
-Type: `String`
+> **Important:** If the `pattern` used within `all()` exists for a specific `method` as well, then **only** the method-specific entry will be returned!
 
-Any valid HTTP method name.
+```js
+router.post('/hello', () => 'FROM POST');
+router.add('GET', '/hello', () => 'FROM GET');
+router.all('/hello', () => 'FROM ALL');
 
-#### url
-Type: `String`
-
-The URL used to match against pattern definitions. This is typically `req.url`.
+router.find('GET', '/hello').handler();
+//=> 'FROM GET'
+router.find('POST', '/hello').handler();
+//=> 'FROM POST'
+router.find('DELETE', '/hello').handler();
+//=> 'FROM ALL'
+router.find('PUT', '/hello').handler();
+//=> 'FROM ALL'
+```
 
 ### trouter.METHOD(pattern, handler)
 
@@ -111,6 +117,22 @@ app.trace('/foo', noop);
 app.purge('/bar', noop);
 app.copy('/baz', noop);
 ```
+
+### trouter.find(method, url)
+Returns: `Object|Boolean`<br>
+Searches within current instance for a `method` + `pattern` pairing that matches the current `method` + `url`.
+
+This method will return `false` if no match is found. Otherwise it returns an Object with `params` and `handler` keys.
+
+#### method
+Type: `String`
+
+Any valid HTTP method name.
+
+#### url
+Type: `String`
+
+The URL used to match against pattern definitions. This is typically `req.url`.
 
 
 ## Benchmarks
