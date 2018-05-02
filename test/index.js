@@ -38,10 +38,8 @@ test('instance', t => {
 	METHODS.forEach(str => {
 		t.comment(`=== METHOD :: ${str} ===`);
 		t.isFunction(r[str.toLowerCase()], `~> has \`${str}\` method`);
-		t.isArray(r.routes[str], `~~> has \`routes.${str}\` array`);
-		t.isEmpty(r.routes[str], `~~~~> \`routes.${str}\` is an empty array`);
-		t.isObject(r.handlers[str], `~~> has \`handlers.${str}\` object`);
-		t.isEmpty(r.handlers[str], `~~~~> \`handlers.${str}\` is an empty object`);
+		t.is(r.routes[str], undefined, `~~> \`routes.${str}\` undefined initially`);
+		t.is(r.handlers[str], undefined, `~~> \`handlers.${str}\` undefined initially`);
 	});
 
 	t.end();
