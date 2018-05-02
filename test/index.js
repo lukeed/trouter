@@ -34,6 +34,7 @@ test('instance', t => {
 	t.isObject(r.handlers, '~> has `handlers` key');
 
 	t.isFunction(r.add, '~> has `add` method');
+	t.isFunction(r.all, '~> has `all` method');
 
 	METHODS.forEach(str => {
 		t.comment(`=== METHOD :: ${str} ===`);
@@ -95,4 +96,52 @@ test('find()', t => {
 	t.ok(baz.handler, `~> has 'handler' key`);
 	baz.handler(t); // +1
 	t.is(val, 99, '~> successfully executes the handler');
+});
+
+test('all()', t => {
+	t.is(r.routes.HEAD, undefined, '`routes.HEAD` is not defined');
+	t.is(r.handlers.HEAD, undefined, '`handlers.HEAD` is not defined');
+
+	let foo = 0;
+	r.all('/greet/:name', _ => foo++);
+
+	t.is(r.routes.HEAD, undefined, '`routes.HEAD` (still) undefined');
+	t.is(r.handlers.HEAD, undefined, '`handlers.HEAD` (still) undefined');
+	t.isObject(r.handlers['*'], '`handlers["*"]` now exists as object');
+	t.isArray(r.routes['*'], '`routes["*"]` now exists as array');
+
+	let obj1 = r.find('HEAD', '/greet/Bob');
+	t.isObject(obj1, 'find(HEAD) returns standard object');
+	t.is(obj1.params.name, 'Bob', '~> params operate as normal');
+	t.isFunction(obj1.handler, '~> handler is the function');
+
+	obj1.handler();
+	t.is(foo, 1, '~~> handler executed successfully');
+
+	let obj2 = r.find('GET', '/greet/Judy');
+	t.isObject(obj2, 'find(GET) returns standard object');
+	t.is(obj2.params.name, 'Judy', '~> params operate as normal');
+	t.isFunction(obj2.handler, '~> handler is the function');
+
+	obj1.handler();
+	t.is(foo, 2, '~~> handler executed successfully');
+
+	// Now add same definition to HEAD, overrides
+	r.head('/greet/:name', _ => t.pass('>> calls new HEAD handler'));
+	t.isObject(r.handlers.HEAD, 'now `handlers.HEAD` is object');
+	t.isArray(r.routes.HEAD, 'now `routes.HEAD` is array');
+
+	let obj3 = r.find('HEAD', '/greet/Rick');
+	t.isObject(obj3, 'find(HEAD) returns standard object');
+	t.is(obj3.params.name, 'Rick', '~> params operate as normal');
+	t.isFunction(obj3.handler, '~> handler is the function');
+
+	obj3.handler();
+	t.is(foo, 2, '>> does NOT run `all()` handler anymore');
+
+	let obj4 = r.find('POST', '/greet/Morty');
+	obj4.handler();
+	t.is(foo, 3, '~> still runs `all()` for methods w/o same pattern');
+
+	t.end();
 });
