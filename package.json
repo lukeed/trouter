@@ -25,6 +25,7 @@
     "router",
     "routing"
   ],
+  "typings": "./lib/index.d.ts",
   "dependencies": {
     "matchit": "^1.0.0"
   },
