@@ -72,11 +72,11 @@ The supported pattern types are:
 * any match / wildcards (`/users/*`)
 
 #### handler
-Type: `Function`
+Type: `Array|Function`
 
-The function that should be tied to this `pattern`.
+The function(s) that should be tied to this `pattern`.
 
-> **Important:** Trouter does not care what your function signature looks like!<br> You are not bound to the `(req, res)` standard.
+> **Important:** Trouter does not care what your function signature looks like!<br> You are not bound to the `(req, res)` standard, or even passing a `Function` at all!
 
 ### trouter.all(pattern, handler)
 Returns: `self`
