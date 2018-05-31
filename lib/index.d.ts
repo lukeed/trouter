@@ -1,6 +1,6 @@
 type Match = {
 	params: {[key: string]: any},
-	handler: Function,
+	handler: any,
 }
 
 declare class Trouter {
@@ -11,52 +11,52 @@ declare class Trouter {
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	acl(pattern: string, handler: Function): this;
+	acl(pattern: string, handler: any): this;
 
 	/**
 	 * @param method Any valid HTTP method name.
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	add(method: string, pattern: string, handler: Function): this;
+	add(method: string, pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	all(pattern: string, handler: Function): this;
+	all(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	bind(pattern: string, handler: Function): this;
+	bind(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	checkout(pattern: string, handler: Function): this;
+	checkout(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	connect(pattern: string, handler: Function): this;
+	connect(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	copy(pattern: string, handler: Function): this;
+	copy(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	delete(pattern: string, handler: Function): this;
+	delete(pattern: string, handler: any): this;
 
 	/**
 	 * @param method Any valid HTTP method name.
@@ -67,165 +67,165 @@ declare class Trouter {
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	get(pattern: string, handler: Function): this;
+	get(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	head(pattern: string, handler: Function): this;
+	head(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	link(pattern: string, handler: Function): this;
+	link(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	lock(pattern: string, handler: Function): this;
+	lock(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	['m-search'](pattern: string, handler: Function): this;
+	['m-search'](pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	merge(pattern: string, handler: Function): this;
+	merge(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	mkactivity(pattern: string, handler: Function): this;
+	mkactivity(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	mkcalendar(pattern: string, handler: Function): this;
+	mkcalendar(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	mkcol(pattern: string, handler: Function): this;
+	mkcol(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	move(pattern: string, handler: Function): this;
+	move(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	notify(pattern: string, handler: Function): this;
+	notify(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	options(pattern: string, handler: Function): this;
+	options(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	patch(pattern: string, handler: Function): this;
+	patch(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	post(pattern: string, handler: Function): this;
+	post(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	propfind(pattern: string, handler: Function): this;
+	propfind(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	proppatch(pattern: string, handler: Function): this;
+	proppatch(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	purge(pattern: string, handler: Function): this;
+	purge(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	put(pattern: string, handler: Function): this;
+	put(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	rebind(pattern: string, handler: Function): this;
+	rebind(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	report(pattern: string, handler: Function): this;
+	report(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	search(pattern: string, handler: Function): this;
+	search(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	subscribe(pattern: string, handler: Function): this;
+	subscribe(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	trace(pattern: string, handler: Function): this;
+	trace(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	unbind(pattern: string, handler: Function): this;
+	unbind(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	unlink(pattern: string, handler: Function): this;
+	unlink(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	unlock(pattern: string, handler: Function): this;
+	unlock(pattern: string, handler: any): this;
 
 	/**
 	 * @param pattern The routing pattern to match on.
-	 * @param handler The function that should be tied to this pattern.
+	 * @param handler The function(s) that should be tied to this pattern.
 	 */
-	unsubscribe(pattern: string, handler: Function): this;
+	unsubscribe(pattern: string, handler: any): this;
 }
 
 export = Trouter;
