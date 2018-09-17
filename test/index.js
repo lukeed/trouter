@@ -77,6 +77,34 @@ test('add()', t => {
 	t.end();
 });
 
+test('add() – multiple', t => {
+	t.plan(10);
+
+	let foo = 123;
+
+	r.add('SEARCH', '/foobarbaz', () => {
+		t.is(foo, 123, '~> foo was 123');
+		foo *= 2;
+		t.is(foo, 246, '~> foo is now 246');
+	}, () => {
+		t.is(foo, 246, '~> foo was 246');
+		foo += 4;
+		t.is(foo, 250, '~> foo is now 250');
+	});
+
+	let tmp = r.handlers.SEARCH;
+	t.is(Object.keys(tmp).length, 1, 'adds a SEARCH route handler successfully');
+	t.isArray(tmp['/foobarbaz'], 'spreads the handler function into array');
+	t.is(tmp['/foobarbaz'].length, 2, '~> contains two items');
+
+	tmp['/foobarbaz'].forEach(x => {
+		t.isFunction(x, '~~> is a function');
+		x();
+	});
+
+	t.is(foo, 250, 'foo ended as 250');
+});
+
 test('find()', t => {
 	t.plan(15);
 
