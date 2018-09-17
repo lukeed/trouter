@@ -1,6 +1,6 @@
 const { METHODS } = require('http');
 const { test, Test } = require('tape');
-const Trouter = require('../lib');
+const Trouter = require('../');
 
 const r = new Trouter();
 const $ = Test.prototype;

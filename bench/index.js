@@ -1,5 +1,5 @@
 const { Suite } = require('benchmark');
-const Trouter = require('../lib');
+const Trouter = require('../');
 
 const noop = () => {}
 const onCycle = (ev) => console.log(String(ev.target));
