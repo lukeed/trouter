@@ -58,7 +58,8 @@ test('add()', t => {
 	t.is(r.routes.GET[0].length, 2, '~~> has 2 segment (static + param)');
 	t.isObject(r.routes.GET[0][0], '~~> array segments are objects');
 	t.is(Object.keys(r.handlers.GET).length, 1, 'adds a GET route handler successfully');
-	t.isFunction(r.handlers.GET['/foo/:hello'], 'saves the handler function as is');
+	t.isArray(r.handlers.GET['/foo/:hello'], 'spreads the handler function into array');
+	t.isFunction(r.handlers.GET['/foo/:hello'][0], '~> item is function');
 
 	r.post('/bar', tt => {
 		val = 99;
@@ -70,13 +71,14 @@ test('add()', t => {
 	t.is(r.routes.POST[0].length, 1, '~~> has only 1 segment (static)');
 	t.isObject(r.routes.POST[0][0], '~~> array segments are objects');
 	t.is(Object.keys(r.handlers.POST).length, 1, 'adds a POST route handler successfully');
-	t.isFunction(r.handlers.POST['/bar'], 'saves the handler function as is');
+	t.isArray(r.handlers.POST['/bar'], 'spreads the handler function into array');
+	t.isFunction(r.handlers.POST['/bar'][0], '~> item is function');
 
 	t.end();
 });
 
 test('find()', t => {
-	t.plan(13);
+	t.plan(15);
 
 	let foo = r.find('DELETE', '/nothing');
 	t.is(foo, false, 'returns false when no match');
@@ -85,16 +87,18 @@ test('find()', t => {
 	t.isObject(bar, 'returns an object when has match');
 	t.ok(bar.params, `~> has 'params' key`);
 	t.is(bar.params.hello, 'world', `~~> pairs the named 'hello' param with its value`);
-	t.ok(bar.handler, `~> has 'handler' key`);
-	bar.handler(t); // +1
+	t.ok(bar.handlers, `~> has 'handlers' key`);
+	t.isArray(bar.handlers, '~~> is an array!');
+	bar.handlers[0](t); // +1
 	t.is(val, 42, '~> successfully executes the handler');
 
 	let baz = r.find('POST', '/bar');
 	t.isObject(baz, 'returns an object when has match');
 	t.ok(baz.params, `~> has 'params' key`);
 	t.isEmpty(baz.params, `~~> returns empty 'params' even if static route`);
-	t.ok(baz.handler, `~> has 'handler' key`);
-	baz.handler(t); // +1
+	t.ok(baz.handlers, `~> has 'handlers' key`);
+	t.isArray(baz.handlers, '~~> is an array!');
+	baz.handlers[0](t); // +1
 	t.is(val, 99, '~> successfully executes the handler');
 });
 
@@ -113,17 +117,21 @@ test('all()', t => {
 	let obj1 = r.find('HEAD', '/greet/Bob');
 	t.isObject(obj1, 'find(HEAD) returns standard object');
 	t.is(obj1.params.name, 'Bob', '~> params operate as normal');
-	t.isFunction(obj1.handler, '~> handler is the function');
+	t.isArray(obj1.handlers, '~> receives `handlers` array');
+	t.is(obj1.handlers.length, 1, '~~> array has one item');
+	t.isFunction(obj1.handlers[0], '~~> is a function!');
 
-	obj1.handler();
+	obj1.handlers[0]();
 	t.is(foo, 1, '~~> handler executed successfully');
 
 	let obj2 = r.find('GET', '/greet/Judy');
 	t.isObject(obj2, 'find(GET) returns standard object');
 	t.is(obj2.params.name, 'Judy', '~> params operate as normal');
-	t.isFunction(obj2.handler, '~> handler is the function');
+	t.isArray(obj2.handlers, '~> receives `handlers` array');
+	t.is(obj2.handlers.length, 1, '~~> array has one item');
+	t.isFunction(obj2.handlers[0], '~~> is a function!');
 
-	obj1.handler();
+	obj2.handlers[0]();
 	t.is(foo, 2, '~~> handler executed successfully');
 
 	// Now add same definition to HEAD, overrides
@@ -134,13 +142,15 @@ test('all()', t => {
 	let obj3 = r.find('HEAD', '/greet/Rick');
 	t.isObject(obj3, 'find(HEAD) returns standard object');
 	t.is(obj3.params.name, 'Rick', '~> params operate as normal');
-	t.isFunction(obj3.handler, '~> handler is the function');
+	t.isArray(obj3.handlers, '~> receives `handlers` array');
+	t.is(obj3.handlers.length, 1, '~~> array has one item');
+	t.isFunction(obj3.handlers[0], '~~> is a function!');
 
-	obj3.handler();
+	obj3.handlers[0]();
 	t.is(foo, 2, '>> does NOT run `all()` handler anymore');
 
 	let obj4 = r.find('POST', '/greet/Morty');
-	obj4.handler();
+	obj4.handlers[0]();
 	t.is(foo, 3, '~> still runs `all()` for methods w/o same pattern');
 
 	t.end();
