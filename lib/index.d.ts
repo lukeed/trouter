@@ -1,6 +1,6 @@
 type Match = {
 	params: {[key: string]: any},
-	handler: any,
+	handlers: Array<any>,
 }
 
 declare class Trouter {
