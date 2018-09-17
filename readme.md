@@ -31,10 +31,12 @@ router
 // Find a route definition
 let obj = router.find('GET', '/users/123');
 //=> obj.params ~> { id:123 }
-//=> obj.handler ~> Function
+//=> obj.handlers ~> Array<Function>
 
-// Execute the handler, pass value
-obj.handler( obj.params.id );
+// Execute the handlers, passing value
+obj.handlers.forEach(fn => {
+  fn(obj.params.id);
+});
 //=> ~> Getting user with ID: 123
 
 // Returns `false` if no match
@@ -48,10 +50,10 @@ router.find('DELETE', '/foo');
 
 Initializes a new `Trouter` instance. Currently accepts no options.
 
-### trouter.add(method, pattern, handler)
+### trouter.add(method, pattern, ...handlers)
 Returns: `self`
 
-Stores a `method` + `pattern` pairing internally, along with its handler.
+Stores a `method` + `pattern` pairing internally, along with its handler(s).
 
 #### method
 Type: `String`
@@ -71,17 +73,19 @@ The supported pattern types are:
 * optional parameters (`/users/:id?/books/:title?`)
 * any match / wildcards (`/users/*`)
 
-#### handler
+#### handlers
 Type: `Array|Function`
 
 The function(s) that should be tied to this `pattern`.
 
+Because this is a [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters), whatever you pass will _always_ be cast to an Array.
+
 > **Important:** Trouter does not care what your function signature looks like!<br> You are not bound to the `(req, res)` standard, or even passing a `Function` at all!
 
-### trouter.all(pattern, handler)
+### trouter.all(pattern, ...handlers)
 Returns: `self`
 
-This is an alias for [`trouter.add('*', pattern, handler)`](#trouteraddmethod-pattern-handler), matching **all** HTTP methods.
+This is an alias for [`trouter.add('*', pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), matching **all** HTTP methods.
 
 > **Important:** If the `pattern` used within `all()` exists for a specific `method` as well, then **only** the method-specific entry will be returned!
 
@@ -90,19 +94,23 @@ router.post('/hello', () => 'FROM POST');
 router.add('GET', '/hello', () => 'FROM GET');
 router.all('/hello', () => 'FROM ALL');
 
-router.find('GET', '/hello').handler();
+let { handlers } = router.find('GET', '/hello');
+handlers[0]();
 //=> 'FROM GET'
-router.find('POST', '/hello').handler();
+
+router.find('POST', '/hello').handlers[0]();
 //=> 'FROM POST'
-router.find('DELETE', '/hello').handler();
+
+router.find('DELETE', '/hello').handlers[0]();
 //=> 'FROM ALL'
-router.find('PUT', '/hello').handler();
+
+router.find('PUT', '/hello').handlers[0]();
 //=> 'FROM ALL'
 ```
 
-### trouter.METHOD(pattern, handler)
+### trouter.METHOD(pattern, ...handlers)
 
-This is an alias for [`trouter.add(METHOD, pattern, handler)`](#trouteraddmethod-pattern-handler), where `METHOD` is **any** lowercased HTTP method name.
+This is an alias for [`trouter.add(METHOD, pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), where `METHOD` is **any** lowercased HTTP method name.
 
 ```js
 const noop = _ => {}:
@@ -122,7 +130,11 @@ app.copy('/baz', noop);
 Returns: `Object|Boolean`<br>
 Searches within current instance for a `method` + `pattern` pairing that matches the current `method` + `url`.
 
-This method will return `false` if no match is found. Otherwise it returns an Object with `params` and `handler` keys.
+This method will return `false` if no match is found. Otherwise it returns an Object with `params` and `handlers` keys.
+
+* `params` &mdash; Object whose keys are the named parameters of your route pattern.
+* `handlers` &mdash; Array containing the `...handlers` provided to [`.add()`](#trouteraddmethod-pattern-handlers) or [`.METHOD()`](#troutermethodpattern-handlers)
+
 
 #### method
 Type: `String`
