@@ -1,9 +1,10 @@
-const { METHODS } = require('http');
 const { test, Test } = require('tape');
 const Trouter = require('../');
 
 const r = new Trouter();
 const $ = Test.prototype;
+
+const METHODS = ['GET', 'HEAD', 'PATCH', 'OPTIONS', 'CONNECT', 'DELETE', 'TRACE', 'POST', 'PUT'];
 
 $.isEmpty = function (val, msg) {
 	this.ok(!Object.keys(val).length, msg);
