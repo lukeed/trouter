@@ -58,7 +58,11 @@ Stores a `method` + `pattern` pairing internally, along with its handler(s).
 #### method
 Type: `String`
 
-Any valid HTTP method name.
+Any lowercased, [valid HTTP/1.1 verb](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods#Specifications) &mdash; choose from one of the following:
+
+```
+GET  HEAD  PATCH  OPTIONS  CONNECT  DELETE  TRACE  POST  PUT
+```
 
 #### pattern
 Type: `String`
@@ -110,7 +114,7 @@ router.find('PUT', '/hello').handlers[0]();
 
 ### trouter.METHOD(pattern, ...handlers)
 
-This is an alias for [`trouter.add(METHOD, pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), where `METHOD` is **any** lowercased HTTP method name.
+This is an alias for [`trouter.add(METHOD, pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), where `METHOD` is any lowercased HTTP verb.
 
 ```js
 const noop = _ => {}:
@@ -122,8 +126,7 @@ app.patch('/users/:id', noop);
 
 // less common methods too
 app.trace('/foo', noop);
-app.purge('/bar', noop);
-app.copy('/baz', noop);
+app.connect('/bar', noop);
 ```
 
 ### trouter.find(method, url)
