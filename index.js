@@ -11,9 +11,9 @@ class Trouter {
 		this.head = this.add.bind(this, 'HEAD');
 		this.patch = this.add.bind(this, 'PATCH');
 		this.options = this.add.bind(this, 'OPTIONS');
-    this.connect = this.add.bind(this, 'CONNECT');
+		this.connect = this.add.bind(this, 'CONNECT');
 		this.delete = this.add.bind(this, 'DELETE');
-    this.trace = this.add.bind(this, 'TRACE');
+		this.trace = this.add.bind(this, 'TRACE');
 		this.post = this.add.bind(this, 'POST');
 		this.put = this.add.bind(this, 'PUT');
 	}
