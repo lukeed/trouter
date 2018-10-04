@@ -18,10 +18,8 @@ class Trouter {
 
 	add(method, pattern, ...fns) {
 		let obj = parse(pattern);
-		obj.method = method;
-		fns.forEach(fn => {
-			obj.handler = fn;
-			this.routes.push(obj);
+		fns.forEach(handler => {
+			this.routes.push(Object.assign({ method, handler }, obj));
 		});
 		return this;
 	}
