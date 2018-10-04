@@ -1,12 +1,10 @@
-const { exec, match, parse } = require('matchit');
+const parse = require('regexparam');
 
 class Trouter {
 	constructor(opts) {
-		this.opts = opts || {};
-		this.routes = {};
-		this.handlers = {};
+		this.routes = [];
 
-		this.all = this.add.bind(this, '*');
+		this.all = this.add.bind(this, '');
 		this.get = this.add.bind(this, 'GET');
 		this.head = this.add.bind(this, 'HEAD');
 		this.patch = this.add.bind(this, 'PATCH');
@@ -19,26 +17,35 @@ class Trouter {
 	}
 
 	add(method, pattern, ...fns) {
-		// Save decoded pattern info
-		if (this.routes[method] === void 0) this.routes[method]=[];
-		this.routes[method].push(parse(pattern));
-		// Save route handler(s)
-		if (this.handlers[method] === void 0) this.handlers[method]={};
-		this.handlers[method][pattern] = fns;
-		// Allow chainable
+		let obj = parse(pattern);
+		obj.method = method;
+		fns.forEach(fn => {
+			obj.handler = fn;
+			this.routes.push(obj);
+		});
 		return this;
 	}
 
 	find(method, url) {
-		let arr = match(url, this.routes[method] || []);
-		if (arr.length === 0) {
-			arr = match(url, this.routes[method='*'] || []);
-			if (!arr.length) return false;
+		let i=0, j=0, tmp, len, arr=this.routes;
+		let matches=[], params={}, handlers=[];
+		let isRoot = (url === '/');
+		for (; i < arr.length; i++) {
+			tmp = arr[i];
+			if (method.indexOf(tmp.method) !== 0) continue;
+			if (isRoot) {
+				handlers.push(tmp.handler);
+			} else if ((len = tmp.keys.length) > 0) {
+				matches = tmp.pattern.exec(url);
+				if (matches === null) continue;
+				for (j=0; j < len;) params[tmp.keys[j]] = matches[++j] || null;
+				handlers.push(tmp.handler);
+			} else if (tmp.pattern.test(url)) {
+				handlers.push(tmp.handler);
+			} // else not a match
 		}
-		return {
-			params: exec(url, arr),
-			handlers: this.handlers[method][arr[0].old]
-		};
+
+		return { params, handlers };
 	}
 }
 
