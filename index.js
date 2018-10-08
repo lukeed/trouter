@@ -1,7 +1,7 @@
 const parse = require('regexparam');
 
 class Trouter {
-	constructor(opts) {
+	constructor() {
 		this.routes = [];
 
 		this.all = this.add.bind(this, '');
