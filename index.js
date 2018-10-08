@@ -27,13 +27,10 @@ class Trouter {
 	find(method, url) {
 		let i=0, j=0, tmp, len, arr=this.routes;
 		let matches=[], params={}, handlers=[];
-		let isRoot = (url === '/');
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
 			if (method.indexOf(tmp.method) !== 0) continue;
-			if (isRoot) {
-				handlers.push(tmp.handler);
-			} else if ((len = tmp.keys.length) > 0) {
+			if ((len = tmp.keys.length) > 0) {
 				matches = tmp.pattern.exec(url);
 				if (matches === null) continue;
 				for (j=0; j < len;) params[tmp.keys[j]] = matches[++j] || null;
