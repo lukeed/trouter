@@ -58,7 +58,7 @@ Stores a `method` + `pattern` pairing internally, along with its handler(s).
 #### method
 Type: `String`
 
-Any lowercased, [valid HTTP/1.1 verb](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods#Specifications) &mdash; choose from one of the following:
+Any uppercased, [valid HTTP/1.1 verb](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods#Specifications) &mdash; choose from one of the following:
 
 ```
 GET  HEAD  PATCH  OPTIONS  CONNECT  DELETE  TRACE  POST  PUT
