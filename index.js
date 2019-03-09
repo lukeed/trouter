@@ -16,10 +16,10 @@ class Trouter {
 		this.put = this.add.bind(this, 'PUT');
 	}
 
-	add(method, route, ...handler) {
+	add(method, route, ...handlers) {
 		let { keys, pattern } = parse(route);
 		let path = '/' + route.match(/^\/?(.*?)\/?(:|\*|$)/)[1];
-		this.routes.push({ keys, pattern, path, method, handler });
+		this.routes.push({ keys, pattern, path, method, handlers });
 		return this;
 	}
 
@@ -30,15 +30,15 @@ class Trouter {
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
 			if (tmp.method.length === 0 && url.indexOf(tmp.path) === 0) {
-				tmp.handler.length > 1 ? (handlers=handlers.concat(tmp.handler)) : handlers.push(tmp.handler[0]);
+				tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
 			} else if (tmp.method === method || isHEAD && tmp.method === 'GET') {
 				if ((len = tmp.keys.length) > 0) {
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
 					for (j=0; j < len;) params[tmp.keys[j]]=matches[++j];
-					tmp.handler.length > 1 ? (handlers=handlers.concat(tmp.handler)) : handlers.push(tmp.handler[0]);
+					tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
 				} else if (tmp.pattern.test(url)) {
-					tmp.handler.length > 1 ? (handlers=handlers.concat(tmp.handler)) : handlers.push(tmp.handler[0]);
+					tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
 				}
 			} // else not a match
 		}
