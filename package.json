@@ -1,8 +1,8 @@
 {
   "name": "trouter",
   "version": "2.0.1",
-  "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
   "repository": "lukeed/trouter",
+  "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
   "license": "MIT",
   "files": [
     "index.js"

@@ -1,4 +1,4 @@
-# trouter [![Build Status](ttps://badgen.now.sh/travis/lukeed/trouter)](https://travis-ci.org/lukeed/trouter)
+# trouter [![Build Status](https://badgen.now.sh/travis/lukeed/trouter)](https://travis-ci.org/lukeed/trouter)
 
 > 🐟 A fast, small-but-mighty, familiar ~fish~ router
 
