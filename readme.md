@@ -1,4 +1,4 @@
-# trouter [![Build Status](https://travis-ci.org/lukeed/trouter.svg?branch=master)](https://travis-ci.org/lukeed/trouter)
+# trouter [![Build Status](ttps://badgen.now.sh/travis/lukeed/trouter)](https://travis-ci.org/lukeed/trouter)
 
 > 🐟 A fast, small-but-mighty, familiar ~fish~ router
 
@@ -39,16 +39,16 @@ obj.handlers.forEach(fn => {
 });
 //=> ~> Getting user with ID: 123
 
-// Returns `false` if no match
+// Returns empty keys when no match
 router.find('DELETE', '/foo');
-//=> false
+//=> { params:{}, handlers:[] }
 ```
 
 ## API
 
 ### Trouter()
+Initializes a new `Trouter` instance.
 
-Initializes a new `Trouter` instance. Currently accepts no options.
 
 ### trouter.add(method, pattern, ...handlers)
 Returns: `self`
@@ -75,10 +75,11 @@ The supported pattern types are:
 * named parameters (`/users/:id`)
 * nested parameters (`/users/:id/books/:title`)
 * optional parameters (`/users/:id?/books/:title?`)
+* suffixed parameters (`/movies/:title.mp4`, `movies/:title.(mp4|mov)`)
 * any match / wildcards (`/users/*`)
 
-#### handlers
-Type: `Array|Function`
+#### ...handlers
+Type: `Function`
 
 The function(s) that should be tied to this `pattern`.
 
@@ -86,31 +87,57 @@ Because this is a [rest parameter](https://developer.mozilla.org/en-US/docs/Web/
 
 > **Important:** Trouter does not care what your function signature looks like!<br> You are not bound to the `(req, res)` standard, or even passing a `Function` at all!
 
+
+### trouter.use(pattern, ...handlers)
+Returns: `self`
+
+This is an alias for [`trouter.add('', pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), matching **all** HTTP methods.
+
+However, unlike [`trouter.all`](#trouterallpattern-handlers), the `pattern` you defined **IS NOT RESTRICTIVE**, which means that the route will match any & all URLs that start (but not end) with a matching segment.
+
+```js
+router.use('/foo', 'USE /foo');
+router.use('/foo/:name', 'USE /foo/:name');
+router.post('/foo/:name', 'POST /foo/:name');
+router.head('/foo/:name/hello', 'HEAD /foo/:name/hello');
+
+router.find('GET', '/foo').handlers;
+//=> ['USE /foo']
+
+router.find('POST', '/foo/bar').handlers;
+//=> ['USE /foo', 'USE /foo/:name', 'POST /foo/:name']
+
+router.find('HEAD', '/foo/bar/hello').handlers;
+//=> ['USE /foo', 'USE /foo/:name', 'HEAD /foo/:name/hello']
+```
+<sup>_Compare this snippet with the one below to see differences between `trouter.all` and this method._</sup>
+
+
 ### trouter.all(pattern, ...handlers)
 Returns: `self`
 
-This is an alias for [`trouter.add('*', pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), matching **all** HTTP methods.
+This is an alias for [`trouter.add('', pattern, ...handlers)`](#trouteraddmethod-pattern-handlers), matching **all** HTTP methods.
 
-> **Important:** If the `pattern` used within `all()` exists for a specific `method` as well, then **only** the method-specific entry will be returned!
+However, unlike [`trouter.use`](#trouterusepattern-handlers), the `pattern` you defined **IS RESTRICTIVE** and behaves like any other [`trouter.METHOD`](#trouteraddmethod-pattern-handlers) route. This means that the URL must match the defined `pattern` exactly – or have the appropriate optional and/or wildcard segments to accommodate the desired flexibility.
 
 ```js
-router.post('/hello', () => 'FROM POST');
-router.add('GET', '/hello', () => 'FROM GET');
-router.all('/hello', () => 'FROM ALL');
+router.all('/foo', 'ALL /foo');
+router.all('/foo/:name', 'ALL /foo/:name');
+router.post('/foo/:name', 'POST /foo/:name');
+router.head('/foo/:name/hello', 'HEAD /foo/:name/hello');
 
-let { handlers } = router.find('GET', '/hello');
-handlers[0]();
-//=> 'FROM GET'
+router.find('GET', '/foo').handlers;
+//=> ['ALL /foo']
 
-router.find('POST', '/hello').handlers[0]();
-//=> 'FROM POST'
+router.find('POST', '/foo/bar').handlers;
+//=> ['ALL /foo/:name', 'POST /foo/:name']
 
-router.find('DELETE', '/hello').handlers[0]();
-//=> 'FROM ALL'
-
-router.find('PUT', '/hello').handlers[0]();
-//=> 'FROM ALL'
+router.find('HEAD', '/foo/bar/hello').handlers;
+//=> ['HEAD /foo/:name/hello']
 ```
+<sup>_Compare this snippet with the one above to see differences between `trouter.use` and this method._</sup>
+
+
 
 ### trouter.METHOD(pattern, ...handlers)
 
@@ -130,19 +157,26 @@ app.connect('/bar', noop);
 ```
 
 ### trouter.find(method, url)
-Returns: `Object|Boolean`<br>
-Searches within current instance for a `method` + `pattern` pairing that matches the current `method` + `url`.
+Returns: `Object`
 
-This method will return `false` if no match is found. Otherwise it returns an Object with `params` and `handlers` keys.
+Searches within current instance for **all** `method` + `pattern` pairs that satisfy the current `method` + `url`.
+
+> **Important:** Parameters and handlers are assembled/gathered _in the order that they were defined!_
+
+This method will always return an Object with `params` and `handlers` keys.
 
 * `params` &mdash; Object whose keys are the named parameters of your route pattern.
 * `handlers` &mdash; Array containing the `...handlers` provided to [`.add()`](#trouteraddmethod-pattern-handlers) or [`.METHOD()`](#troutermethodpattern-handlers)
+
+> **Note:** The `handlers` and `params` keys will be empty if no matches were found.
 
 
 #### method
 Type: `String`
 
-Any valid HTTP method name.
+Any valid HTTP method name, uppercased.
+
+> **Note:** When searching for `HEAD` routes, `GET` routes will also be inspected.
 
 #### url
 Type: `String`
@@ -152,26 +186,15 @@ The URL used to match against pattern definitions. This is typically `req.url`.
 
 ## Benchmarks
 
-> Run on Node v8.9.0
+> Run on Node v10.13.0
 
 ```
-GET / ON /
-  --> 9,548,621 ops/sec ±0.65% (96 runs sampled)
-
-POST /users ON /users
-  --> 2,324,166 ops/sec ±0.52% (93 runs sampled)
-
-GET /users/123 ON /users/:id
-  --> 1,704,811 ops/sec ±0.50% (95 runs sampled)
-
-PUT /users/123/books ON /users/:id/books/:title?
-  --> 1,396,875 ops/sec ±0.14% (94 runs sampled)
-
-DELETE /users/123/books/foo ON /users/:id/books/:title
-  --> 1,266,708 ops/sec ±0.59% (95 runs sampled)
-
-HEAD /hello on /hello -- via all()
-  --> 1,641,558 ops/sec ±0.14% (96 runs sampled)
+GET /                           x 10,349,863 ops/sec ±2.15% (93 runs sampled)
+POST /users                     x 13,895,099 ops/sec ±0.40% (94 runs sampled)
+GET /users/:id                  x  6,288,457 ops/sec ±0.25% (93 runs sampled)
+PUT /users/:id/books/:title?    x  6,176,501 ops/sec ±0.22% (96 runs sampled)
+DELETE /users/:id/books/:title  x  5,581,288 ops/sec ±2.04% (96 runs sampled)
+HEAD /hello (all)               x  9,700,097 ops/sec ±0.47% (90 runs sampled)
 ```
 
 ## License
