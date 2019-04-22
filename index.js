@@ -16,14 +16,16 @@ class Trouter {
 		this.put = this.add.bind(this, 'PUT');
 	}
 
-	use(route, ...handlers) {
+	use(route, ...fns) {
+		let handlers = [].concat.apply([], fns);
 		let { keys, pattern } = parse(route, true);
 		this.routes.push({ keys, pattern, method:'', handlers });
 		return this;
 	}
 
-	add(method, route, ...handlers) {
+	add(method, route, ...fns) {
 		let { keys, pattern } = parse(route);
+		let handlers = [].concat.apply([], fns);
 		this.routes.push({ keys, pattern, method, handlers });
 		return this;
 	}
