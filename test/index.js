@@ -96,7 +96,7 @@ test('add()', t => {
 test('add() – multiple', t => {
 	const ctx = new Trouter();
 
-	ctx.add('SEARCH', '/foo/:hello', noop, noop);
+	ctx.add('SEARCH', '/foo/:hello', [noop, noop]);
 	t.is(ctx.routes.length, 1, 'added "SEARCH /foo/:hello" route successfully');
 
 	t.isRoute(ctx.routes[0], {
@@ -135,6 +135,28 @@ test('use()', t => {
 		keys: ['hello'],
 		route: '/foo/bar',
 		count: 1
+	});
+
+	console.log(' ');
+	ctx.use('/', [noop, noop, noop]);
+	t.is(ctx.routes.length, 2, 'added "ANY /" routes successfully');
+
+	t.isRoute(ctx.routes[1], {
+		keys: [],
+		method: '',
+		route: '/',
+		count: 3
+	});
+
+	console.log(' ');
+	ctx.use('/foo/:world?', noop, [noop, noop], noop);
+	t.is(ctx.routes.length, 3, 'added "ANY /foo/:world?" routes successfully');
+
+	t.isRoute(ctx.routes[2], {
+		keys: ['world'],
+		method: '',
+		route: '/foo/hello',
+		count: 4
 	});
 
 	t.end();
