@@ -1,5 +1,5 @@
-const { test, Test } = require('tape');
-const Trouter = require('../');
+import { test, Test } from 'tape';
+import Trouter from '../';
 
 const noop = () => {};
 const METHODS = ['GET', 'HEAD', 'PATCH', 'OPTIONS', 'CONNECT', 'DELETE', 'TRACE', 'POST', 'PUT'];

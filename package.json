@@ -21,7 +21,7 @@
   "scripts": {
     "bench": "node bench",
     "build": "bundt index.mjs",
-    "test": "tape test/*.js | tap-spec"
+    "test": "tape -r esm test/*.js | tap-spec"
   },
   "keywords": [
     "route",
@@ -33,7 +33,8 @@
   },
   "devDependencies": {
     "bundt": "0.4.0",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "esm": "3.2.22",
+    "tap-spec": "^5.0.0",
+    "tape": "4.10.1"
   }
 }
