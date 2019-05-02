@@ -1,6 +1,6 @@
 import parse from 'regexparam';
 
-export class Trouter {
+export default class Trouter {
 	constructor() {
 		this.routes = [];
 
