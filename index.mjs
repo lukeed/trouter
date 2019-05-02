@@ -1,6 +1,6 @@
-const parse = require('regexparam');
+import parse from 'regexparam';
 
-class Trouter {
+export class Trouter {
 	constructor() {
 		this.routes = [];
 
@@ -51,5 +51,3 @@ class Trouter {
 		return { params, handlers };
 	}
 }
-
-module.exports = Trouter;
