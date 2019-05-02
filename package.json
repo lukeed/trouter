@@ -20,7 +20,7 @@
   },
   "scripts": {
     "bench": "node bench",
-    "build": "bundt index.mjs",
+    "prepack": "bundt index.mjs",
     "test": "tape -r esm test/*.js | tap-spec"
   },
   "keywords": [
