@@ -9,7 +9,9 @@ const routes = [
 	['POST', '/users', '/users'],
 	['GET', '/users/:id', '/users/123'],
 	['PUT', '/users/:id/books/:title?', '/users/123/books'],
-	['DELETE', '/users/:id/books/:title', '/users/123/books/foo']
+	['DELETE', '/users/:id/books/:title', '/users/123/books/foo'],
+	['PATCH', /^[/]users[/](?<id>\d+)[/]?$/, '/users/456'],
+	['OPTIONS', /^[/]users[/](?<id>\d+)[/]books[/](?<title>[^/]+)[/]?$/, '/users/456/books/foo']
 ];
 
 const trouter = new Trouter();
