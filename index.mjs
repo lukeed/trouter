@@ -18,13 +18,13 @@ export default class Trouter {
 
 	use(route, ...fns) {
 		let handlers = [].concat.apply([], fns);
-		let { keys = null, pattern } = route instanceof RegExp ? { pattern: route } : parse(route, true);
+		let { keys, pattern } = parse(route, true);
 		this.routes.push({ keys, pattern, method:'', handlers });
 		return this;
 	}
 
 	add(method, route, ...fns) {
-		let { keys = null, pattern } = route instanceof RegExp ? { pattern: route } : parse(route);
+		let { keys, pattern } = parse(route);
 		let handlers = [].concat.apply([], fns);
 		this.routes.push({ keys, pattern, method, handlers });
 		return this;
@@ -32,19 +32,15 @@ export default class Trouter {
 
 	find(method, url) {
 		let isHEAD=(method === 'HEAD');
-		let i=0, j=0, tmp, arr=this.routes, key;
+		let i=0, j=0, tmp, arr=this.routes;
 		let matches=[], params={}, handlers=[];
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
 			if (tmp.method.length === 0 || tmp.method === method || isHEAD && tmp.method === 'GET') {
-				if (tmp.keys === null || tmp.keys.length > 0) {
+				if (tmp.keys.length > 0) {
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
-					if (tmp.keys === null) {
-						for (key in matches.groups || {}) params[key]=matches.groups[key];
-					} else {
-						for (j=0; j < tmp.keys.length;) params[tmp.keys[j]]=matches[++j];
-					}
+					for (j=0; j < tmp.keys.length;) params[tmp.keys[j]]=matches[++j];
 					tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
 				} else if (tmp.pattern.test(url)) {
 					tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
