@@ -1,7 +1,7 @@
 import { test, Test } from 'tape';
 import Trouter from '../';
 
-const regexpNamedGroupsSupported = 'groups' in 'x'.match(/x/);
+const hasNamedGroups = 'groups' in 'x'.match(/x/);
 
 const noop = () => {};
 const METHODS = ['GET', 'HEAD', 'PATCH', 'OPTIONS', 'CONNECT', 'DELETE', 'TRACE', 'POST', 'PUT'];
@@ -29,7 +29,7 @@ Object.assign(Test.prototype, {
 			this.isArray(val.keys, '~~> keys is an Array');
 			this.same(val.keys, obj.keys, '~~> keys are expected');
 		} else {
-			this.is(val.keys, null, '~~> keys is null')
+			this.is(val.keys, false, '~~> (RegExp) keys is false')
 		}
 		this.true(val.pattern instanceof RegExp, '~~> pattern is a RegExp');
 		if (obj.route) this.true(val.pattern.test(obj.route), '~~> pattern satisfies route');
@@ -95,7 +95,7 @@ test('add()', t => {
 		count: 1
 	});
 
-	if (regexpNamedGroupsSupported) {
+	if (hasNamedGroups) {
 		console.log(' ');
 		ctx.add('PUT', /^[/]foo[/](?<hello>\w+)[/]?$/, noop);
 		t.is(ctx.routes.length, 3, 'added "PUT /^[/]foo[/](?<hello>\\w+)[/]?$/" route successfully');
@@ -489,7 +489,7 @@ test('find() w/ use()', t => {
 });
 
 
-if (regexpNamedGroupsSupported) {
+if (hasNamedGroups) {
 	test('find() - regex w/ named groups', t => {
 		t.plan(9);
 		const ctx = new Trouter();
@@ -523,7 +523,7 @@ if (regexpNamedGroupsSupported) {
 			new Trouter()
 				.use('/foo', req => {
 					t.pass('~> ran use("/foo")" route'); // x2
-					isRoot || t.is(req.params.title, 'bar', '~~> saw "param.title" value');
+					isRoot || t.is(req.params.title, 'bar', '~~> saw "params.title" value');
 					t.is(req.chain++, 0, '~~> ran 1st');
 				})
 				.get('/foo', req => {

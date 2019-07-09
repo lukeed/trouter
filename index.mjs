@@ -32,12 +32,17 @@ export default class Trouter {
 
 	find(method, url) {
 		let isHEAD=(method === 'HEAD');
-		let i=0, j=0, tmp, arr=this.routes;
+		let i=0, j=0, k, tmp, arr=this.routes;
 		let matches=[], params={}, handlers=[];
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
 			if (tmp.method.length === 0 || tmp.method === method || isHEAD && tmp.method === 'GET') {
-				if (tmp.keys.length > 0) {
+				if (tmp.keys === false) {
+					matches = tmp.pattern.exec(url);
+					if (matches === null) continue;
+					if (matches.groups !== void 0) for (k in matches.groups) params[k]=matches.groups[k];
+					tmp.handlers.length > 1 ? (handlers=handlers.concat(tmp.handlers)) : handlers.push(tmp.handlers[0]);
+				} else if (tmp.keys.length > 0) {
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
 					for (j=0; j < tmp.keys.length;) params[tmp.keys[j]]=matches[++j];
