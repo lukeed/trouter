@@ -65,9 +65,11 @@ GET  HEAD  PATCH  OPTIONS  CONNECT  DELETE  TRACE  POST  PUT
 ```
 
 #### pattern
-Type: `String | RegExp`
+Type: `String` or `RegExp`
 
-Trouter supports simple route patterns which are fast and well readable but limited. If you need more complex patterns, you can pass an instance of `RegExp` with parameters specified as named capture groups (supported since Node 10).
+Trouter supports simple route patterns which are fast and well readable but limited. If you need more complex patterns, you can pass an instance of `RegExp` with parameters specified as named capture groups.
+
+> **Important:** RegExp named capture groups are [supported in Node.js 10.x](https://node.green/#ES2018-features--RegExp-named-capture-groups) and above!
 
 The supported route pattern types are:
 
