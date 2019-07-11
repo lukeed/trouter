@@ -65,11 +65,13 @@ GET  HEAD  PATCH  OPTIONS  CONNECT  DELETE  TRACE  POST  PUT
 ```
 
 #### pattern
-Type: `String`
+Type: `String` or `RegExp`
 
-Unlike most router libraries, Trouter does not use `RegExp` to determine pathname matches. Instead, it uses string comparison which is much faster, but also limits the pattern complexity.
+Trouter supports simple route patterns which are fast and well readable but limited. If you need more complex patterns, you can pass an instance of `RegExp` with parameters specified as named capture groups.
 
-The supported pattern types are:
+> **Important:** RegExp named capture groups are [supported in Node.js 10.x](https://node.green/#ES2018-features--RegExp-named-capture-groups) and above!
+
+The supported route pattern types are:
 
 * static (`/users`)
 * named parameters (`/users/:id`)

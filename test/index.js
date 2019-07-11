@@ -1,6 +1,8 @@
 import { test, Test } from 'tape';
 import Trouter from '../';
 
+const hasNamedGroups = 'groups' in 'x'.match(/x/);
+
 const noop = () => {};
 const METHODS = ['GET', 'HEAD', 'PATCH', 'OPTIONS', 'CONNECT', 'DELETE', 'TRACE', 'POST', 'PUT'];
 
@@ -22,9 +24,13 @@ Object.assign(Test.prototype, {
 	},
 	isRoute(val, obj={}) {
 		this.isObject(val, '~> route definition is an object');
-		this.isArray(val.keys, '~~> keys is an Array');
-		if (obj.keys) this.same(val.keys, obj.keys, '~~> keys are expected');
 
+		if (obj.keys) {
+			this.isArray(val.keys, '~~> keys is an Array');
+			this.same(val.keys, obj.keys, '~~> keys are expected');
+		} else {
+			this.is(val.keys, false, '~~> (RegExp) keys is false')
+		}
 		this.true(val.pattern instanceof RegExp, '~~> pattern is a RegExp');
 		if (obj.route) this.true(val.pattern.test(obj.route), '~~> pattern satisfies route');
 
@@ -88,6 +94,19 @@ test('add()', t => {
 		route: '/bar',
 		count: 1
 	});
+
+	if (hasNamedGroups) {
+		console.log(' ');
+		ctx.add('PUT', /^[/]foo[/](?<hello>\w+)[/]?$/, noop);
+		t.is(ctx.routes.length, 3, 'added "PUT /^[/]foo[/](?<hello>\\w+)[/]?$/" route successfully');
+
+		t.isRoute(ctx.routes[2], {
+			keys: null,
+			method: 'PUT',
+			route: '/foo/bar',
+			count: 1
+		});
+	}
 
 	t.end();
 });
@@ -468,3 +487,76 @@ test('find() w/ use()', t => {
 
 	t.end();
 });
+
+
+if (hasNamedGroups) {
+	test('find() - regex w/ named groups', t => {
+		t.plan(9);
+		const ctx = new Trouter();
+
+		ctx.get(/^[/]foo[/](?<title>\w+)[/]?$/, req => {
+			t.is(req.chain++, 1, '~> 1st "GET /^[/]foo[/](?<title>\\w+)[/]?$/" ran first');
+			t.is(req.params.title, 'bar', '~> "params.title" is expected');
+		}, req => {
+			t.is(req.chain++, 2, '~> 2nd "GET /^[/]foo[/](?<title>\\w+)[/]?$/" ran second');
+		});
+
+		const out = ctx.find('GET', '/foo/bar');
+
+		t.isObject(out, 'returns an object');
+		t.isObject(out.params, '~> has "params" key (object)');
+		t.is(out.params.title, 'bar', '~~> "params.title" value is correct');
+
+		t.isArray(out.handlers, `~> has "handlers" key (array)`);
+		t.is(out.handlers.length, 2, '~~> saved both handlers');
+
+		out.chain = 1;
+		out.handlers.forEach(fn => fn(out));
+		t.is(out.chain, 3, '~> executes the handler group sequentially');
+	});
+
+
+	test('find() – multiple regex w/ named groups', t => {
+		t.plan(18);
+
+		const ctx = (
+			new Trouter()
+				.use('/foo', req => {
+					t.pass('~> ran use("/foo")" route'); // x2
+					isRoot || t.is(req.params.title, 'bar', '~~> saw "params.title" value');
+					t.is(req.chain++, 0, '~~> ran 1st');
+				})
+				.get('/foo', req => {
+					t.pass('~> ran "GET /foo" route');
+					t.is(req.chain++, 1, '~~> ran 2nd');
+				})
+				.get(/^[/]foo(?:[/](?<title>\w+))?[/]?$/, req => {
+					t.pass('~> ran "GET /^[/]foo[/](?<title>\\w+)?[/]?$/" route'); // x2
+					isRoot || t.is(req.params.title, 'bar', '~~> saw "params.title" value');
+					isRoot ? t.is(req.chain++, 2, '~~> ran 3rd') : t.is(req.chain++, 1, '~~> ran 2nd');
+				})
+				.get(/^[/]foo[/](?<wild>.*)$/, req => {
+					t.pass('~> ran "GET /^[/]foo[/](?<wild>.*)$/" route');
+					t.is(req.params.wild, 'bar', '~~> saw "params.wild" value');
+					t.is(req.params.title, 'bar', '~~> saw "params.title" value');
+					t.is(req.chain++, 2, '~~> ran 3rd');
+				})
+		);
+
+		let isRoot = true;
+		console.log('GET /foo');
+		let foo = ctx.find('GET', '/foo');
+		t.is(foo.handlers.length, 3, 'found 3 handlers');
+
+		foo.chain = 0;
+		foo.handlers.forEach(fn => fn(foo));
+
+		isRoot = false;
+		console.log('GET /foo/bar');
+		let bar = ctx.find('GET', '/foo/bar');
+		t.is(bar.handlers.length, 3, 'found 3 handlers');
+
+		bar.chain = 0;
+		bar.handlers.forEach(fn => fn(bar));
+	});
+}
