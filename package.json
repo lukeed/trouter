@@ -34,7 +34,7 @@
   "devDependencies": {
     "bundt": "0.4.0",
     "esm": "3.2.22",
-    "tap-spec": "^5.0.0",
-    "tape": "4.10.1"
+    "tap-spec": "5.0.0",
+    "tape": "4.11.0"
   }
 }
