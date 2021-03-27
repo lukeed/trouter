@@ -3,12 +3,14 @@
   "version": "3.1.0",
   "repository": "lukeed/trouter",
   "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
+  "types": "index.d.ts",
   "module": "index.mjs",
   "main": "index.js",
   "license": "MIT",
   "files": [
     "index.js",
-    "index.mjs"
+    "index.mjs",
+    "index.d.ts"
   ],
   "author": {
     "name": "Luke Edwards",
