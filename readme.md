@@ -13,7 +13,8 @@ $ npm install --save trouter
 ## Usage
 
 ```js
-const Trouter = require('trouter');
+import Trouter from 'trouter';
+
 const router = new Trouter();
 
 // Define all routes
