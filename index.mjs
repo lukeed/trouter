@@ -50,7 +50,7 @@ export default class Trouter {
 		let matches=[], params={}, handlers=[];
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
-			if (tmp.mthidx === mthidx  || !tmp.mthidx || (isHEAD && tmp.mthidx===1) ) {
+			if (tmp.mthidx === mthidx  || tmp.mthidx === 0 || (isHEAD && tmp.mthidx===1) ) {
 				if (tmp.keys === false) {
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
