@@ -1,0 +1,48 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Node.js v${{ matrix.nodejs }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nodejs: [6, 8, 10, 12, 14, 16, 18]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.nodejs }}
+
+    - name: (cache) restore
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+
+    - name: Install
+      run: npm install
+
+    - name: (coverage) Install
+      if: matrix.nodejs >= 18
+      run: npm install -g nyc
+
+    - name: Build
+      run: npm run build
+
+    - name: Test
+      run: npm test
+      if: matrix.nodejs < 18
+
+    - name: (coverage) Test
+      run: nyc --include=src npm test
+      if: matrix.nodejs >= 18
+
+    # - name: (coverage) Report
+    #   if: matrix.nodejs >= 18
+    #   run: |
+    #     nyc report --reporter=text-lcov > coverage.lcov
+    #     bash <(curl -s https://codecov.io/bash)
+    #   env:
+    #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
