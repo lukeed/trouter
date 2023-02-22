@@ -1,6 +1,7 @@
 import parse from 'regexparam';
 
-const mthMap = {
+const MAP = {
+	"": 0,
 	GET: 1,
 	HEAD: 2,
 	PATCH: 3,
@@ -10,8 +11,7 @@ const mthMap = {
 	TRACE: 7,
 	POST: 8,
 	PUT: 9,
-	"": 0, // 'all'
-}
+};
 
 export default class Trouter {
 	constructor() {
@@ -32,25 +32,25 @@ export default class Trouter {
 	use(route, ...fns) {
 		let handlers = [].concat.apply([], fns);
 		let { keys, pattern } = parse(route, true);
-		this.routes.push({ keys, pattern, method: '', handlers, mthidx: mthMap[''] });
+		this.routes.push({ keys, pattern, method: '', handlers, midx: MAP[''] });
 		return this;
 	}
 
 	add(method, route, ...fns) {
 		let { keys, pattern } = parse(route);
 		let handlers = [].concat.apply([], fns);
-		this.routes.push({ keys, pattern, method, handlers, mthidx: mthMap[method] });
+		this.routes.push({ keys, pattern, method, handlers, midx: MAP[method] });
 		return this;
 	}
 
 	find(method, url) {
-		let mthidx = mthMap[method];
-		let isHEAD = (mthidx === 2);
+		let midx = MAP[method];
+		let isHEAD = (midx === 2);
 		let i=0, j=0, k, tmp, arr=this.routes;
 		let matches=[], params={}, handlers=[];
 		for (; i < arr.length; i++) {
 			tmp = arr[i];
-			if (tmp.mthidx === mthidx  || tmp.mthidx === 0 || (isHEAD && tmp.mthidx===1) ) {
+			if (tmp.midx === midx  || tmp.midx === 0 || (isHEAD && tmp.midx===1) ) {
 				if (tmp.keys === false) {
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
