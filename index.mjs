@@ -1,4 +1,4 @@
-import parse from 'regexparam';
+import { parse } from 'regexparam';
 
 const MAP = {
 	"": 0,
