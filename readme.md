@@ -1,4 +1,4 @@
-# trouter [![Build Status](https://badgen.now.sh/travis/lukeed/trouter)](https://travis-ci.org/lukeed/trouter)
+# trouter [![CI](https://github.com/lukeed/trouter/actions/workflows/ci.yml/badge.svg)](https://github.com/lukeed/trouter/actions/workflows/ci.yml)
 
 > 🐟 A fast, small-but-mighty, familiar ~fish~ router
 

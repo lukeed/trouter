@@ -38,11 +38,3 @@ jobs:
     - name: (coverage) Test
       run: c8 --include=src npm test
       if: matrix.nodejs >= 18
-
-    - name: (coverage) Report
-      if: matrix.nodejs >= 18
-      run: |
-        c8 report --reporter=text-lcov > coverage.lcov
-        bash <(curl -s https://codecov.io/bash)
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
