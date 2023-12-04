@@ -6,7 +6,7 @@ type Methods = 'ACL' | 'BIND' | 'CHECKOUT' | 'CONNECT' | 'COPY' | 'DELETE' | 'GE
 
 type Pattern = RegExp | string;
 
-export default class Trouter<T = Function> {
+export class Trouter<T = Function> {
 	find(method: Methods, url: string): {
 		params: Record<string, string>;
 		handlers: T[];

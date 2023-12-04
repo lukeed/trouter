@@ -1,6 +1,6 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import Trouter from '../';
+import { Trouter } from '../';
 
 const hasNamedGroups = 'groups' in 'x'.match(/x/);
 

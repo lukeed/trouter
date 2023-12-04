@@ -13,7 +13,7 @@ const MAP = {
 	PUT: 9,
 };
 
-export default class Trouter {
+export class Trouter {
 	constructor() {
 		this.routes = [];
 
