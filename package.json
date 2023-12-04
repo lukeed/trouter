@@ -7,6 +7,14 @@
   "module": "index.mjs",
   "main": "index.js",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "index.js",
     "index.mjs",
