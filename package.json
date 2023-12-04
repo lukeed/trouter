@@ -23,7 +23,7 @@
   "scripts": {
     "bench": "node bench",
     "prepack": "bundt index.mjs",
-    "test": "tape -r esm test/*.js | tap-spec"
+    "test": "uvu -r esm test"
   },
   "keywords": [
     "route",
@@ -35,8 +35,7 @@
   },
   "devDependencies": {
     "bundt": "1.1.2",
-    "esm": "3.2.22",
-    "tap-spec": "5.0.0",
-    "tape": "4.11.0"
+    "esm": "3.2.25",
+    "uvu": "0.5.1"
   }
 }
