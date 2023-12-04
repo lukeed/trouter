@@ -1,6 +1,6 @@
 {
   "name": "trouter",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "repository": "lukeed/trouter",
   "description": "🐟 A fast, small-but-mighty, familiar ~fish~ router",
   "types": "index.d.ts",
