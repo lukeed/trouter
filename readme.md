@@ -80,6 +80,7 @@ The supported route pattern types are:
 * optional parameters (`/users/:id?/books/:title?`)
 * suffixed parameters (`/movies/:title.mp4`, `movies/:title.(mp4|mov)`)
 * any match / wildcards (`/users/*`)
+* optional wildcards (`/users/*?`)
 
 #### ...handlers
 Type: `Function`
