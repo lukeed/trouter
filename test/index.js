@@ -542,4 +542,28 @@ if (hasNamedGroups) {
 	});
 }
 
+for (const flags of ['g', 'y']) {
+	test(`find() - repeated stateful regex (${flags})`, () => {
+		const ctx = new Trouter();
+		const pattern = new RegExp('^/foo$', flags);
+		ctx.get(pattern, noop);
+
+		for (let i=0; i < 3; i++) {
+			const result = ctx.find('GET', '/foo');
+			assert.is(result.handlers.length, 1);
+			assert.equal(result.handlers, [noop]);
+		}
+		pattern.lastIndex = 3;
+		assert.equal(ctx.find('GET', '/foo').handlers, [noop]);
+		assert.equal(ctx.find('GET', '/other').handlers, []);
+		assert.equal(ctx.find('GET', '/foo').handlers, [noop]);
+	});
+}
+
+test('find() - frozen non-stateful regex', () => {
+	const ctx = new Trouter();
+	ctx.get(Object.freeze(/^\/foo$/), noop);
+	assert.equal(ctx.find('GET', '/foo').handlers, [noop]);
+});
+
 test.run();

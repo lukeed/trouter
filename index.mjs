@@ -52,6 +52,7 @@ export class Trouter {
 			tmp = arr[i];
 			if (tmp.midx === midx  || tmp.midx === 0 || (isHEAD && tmp.midx===1) ) {
 				if (tmp.keys === false) {
+					if (tmp.pattern.global || tmp.pattern.sticky) tmp.pattern.lastIndex = 0;
 					matches = tmp.pattern.exec(url);
 					if (matches === null) continue;
 					if (matches.groups !== void 0) for (k in matches.groups) params[k]=matches.groups[k];
